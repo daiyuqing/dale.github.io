@@ -156,6 +156,73 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-图片懒加载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/23/图片懒加载/">图片懒加载</a>
+    </h1>
+  
+
+        
+        <a href="/2018/04/23/图片懒加载/" class="archive-article-date">
+  	<time datetime="2018-04-23T15:48:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在前端工作中经常会碰到同一页面有大量图片的情况，图片如果比较大可能会加载比较慢，用户体验特别差</p>
+<p>我们可以通过懒加载的方式加载图片，以获得更好的用户体验<br>下面简单介绍一下本人实现的图片懒加载原理<br>先写html<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div id=<span class="string">"box"</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-001.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-002.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-003.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-004.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-005.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-007.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-007.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-008.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-009.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-002.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-002.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-002.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-002.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-002.jpg'</span>&gt;</span><br><span class="line">	&lt;img <span class="class"><span class="keyword">class</span></span>=<span class="string">"img"</span> src=<span class="string">"http://img.lanrentuku.com/img/allimg/1212/5-121204193R0-50.gif"</span> data-src=<span class="string">'http://img.ivsky.com/img/tupian/t/201801/06/haian-002.jpg'</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br></pre></td></tr></table></figure></p>
+<p>每个img标签里的src初始为一个loading的图片地址，data-src才是真正要显示的图片地址</p>
+<p>css可以这样写<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;style type=<span class="string">"text/css"</span>&gt;</span><br><span class="line">	*&#123;</span><br><span class="line">		margin: <span class="number">0</span>;</span><br><span class="line">		padding: <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	.img&#123;</span><br><span class="line">		width: <span class="number">400</span>px;</span><br><span class="line">		height: <span class="number">200</span>px;</span><br><span class="line">		display: block;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;<span class="regexp">/style&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>所有的图片标签转换为块级元素独占一行<br>最后是最重要的javascript</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">	<span class="built_in">window</span>.onload=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="comment">//初始化图片，一开始可以看到的图片先显示</span></span><br><span class="line">		change_pic();</span><br><span class="line">		<span class="comment">//监听页面滚动事件</span></span><br><span class="line">		<span class="built_in">window</span>.onscroll=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">			change_pic();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//封装更改图片地址的函数</span></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">change_pic</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="comment">//拿到所有的图片元素集合数组</span></span><br><span class="line">		<span class="keyword">var</span> img=<span class="built_in">document</span>.getElementsByTagName(<span class="string">'img'</span>);</span><br><span class="line">		<span class="comment">//获取当前页面卷起的高度</span></span><br><span class="line">		<span class="keyword">var</span> scrollTop=<span class="built_in">document</span>.documentElement.scrollTop || <span class="built_in">document</span>.body.scrollTop;</span><br><span class="line">		<span class="comment">//遍历图片元素</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">let</span> i <span class="keyword">in</span> img)&#123;</span><br><span class="line">			<span class="comment">//当图片元素距离页面顶部的距离小于当前页面卷起的高度与屏幕高度之和，说明已滚动到可视区域，替换图片链接</span></span><br><span class="line">			<span class="keyword">if</span> (img[i].offsetTop&lt;scrollTop+<span class="built_in">window</span>.screen.availHeight) &#123;</span><br><span class="line">				<span class="keyword">if</span> (img[i].src!=img[i].getAttribute(<span class="string">'data-src'</span>)) &#123;</span><br><span class="line">					img[i].src=img[i].getAttribute(<span class="string">'data-src'</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/04/23/图片懒加载/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-http" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -811,7 +878,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2018 Dale
+    		&copy; 2020 Dale
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -902,11 +969,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -914,11 +981,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">weex</a>
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+                <a href="javascript:void(0)" class="js-tag color5">weex</a>
               </li>
             
             <div class="clearfix"></div>
